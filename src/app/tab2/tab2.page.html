@@ -11,7 +11,7 @@
   <ion-list *ngIf="ListaSeries">
 
     <ion-item-sliding *ngFor="let serie of ListaSeries">
-      <ion-item lines="full" >
+      <ion-item lines="full" (click)="exibirSerie(serie)">
 
         <ion-thumbnail slot="start">
           <img *ngIf="serie.cartaz" src="{{serie.cartaz}}" />
