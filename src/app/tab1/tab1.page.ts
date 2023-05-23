@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IFilme } from '../model/IFilme';
 import { NavigationExtras, Router } from '@angular/router';
+import { AlertController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab1',
@@ -9,7 +10,9 @@ import { NavigationExtras, Router } from '@angular/router';
 })
 export class Tab1Page {
 
-  constructor(public router:Router) {}
+  constructor(public router:Router,
+              public alertController:AlertController,
+              public toastController:ToastController) {}
 
   listaFilmes: IFilme[] = [
     {
@@ -69,4 +72,44 @@ export class Tab1Page {
     this.router.navigate(['filme-detalhe'],navigationExtras);
   }
 
+  async exibirAlertaFavorito(filme:IFilme){
+    const alert = await this.alertController.create({
+
+      header:'Meus Favoritos',
+      message: 'Deseja realmente favoritar este filme ?',
+      buttons:[
+        {
+          text:'Cancelar',
+          role:'cancel',
+          handler: ()=>{
+            filme.favorito=false;
+          }
+        }, {
+          text:'Sim, Favoritar.',
+          handler: ()=>{
+            filme.favorito=true;
+            this.apresentarToast(filme);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async apresentarToast(filme: IFilme) {
+    const toast = await this.toastController.create({
+      message:'Filme adicionado aos favoritos...',
+      duration: 2000,
+      color: 'success',
+      buttons:[
+        {
+          text: 'Desfazer',
+          handler: ()=>{
+            filme.favorito=false;
+          }
+        }
+      ]
+    });
+    toast.present();
+  }
 }
